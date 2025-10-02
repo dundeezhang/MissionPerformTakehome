@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { taskAPI } from "../services/api";
 
+// Custom hook for task management functions
 export const useTaskFunctions = () => {
   const [tasks, setTasks] = useState([]);
   const [isTasksLoading, setIsTasksLoading] = useState(false);
@@ -13,6 +14,7 @@ export const useTaskFunctions = () => {
       setError(null);
       const tasksData = await taskAPI.getAllTasks();
       setTasks(tasksData);
+      return tasksData;
     } catch (error) {
       console.error("Failed to load tasks:", error);
 
@@ -21,9 +23,10 @@ export const useTaskFunctions = () => {
         return;
       }
 
-      setError(
-        "Failed to load tasks. Please check if the backend server is running."
-      );
+      const errorMessage =
+        "Failed to load tasks. Please check if the backend server is running.";
+      setError(errorMessage);
+      throw error;
     } finally {
       setIsTasksLoading(false);
     }
@@ -90,15 +93,17 @@ export const useTaskFunctions = () => {
   const updateTaskStatus = useCallback(
     async (taskId, newStatus) => {
       try {
-        // Find the current task to get its title and description
+        // Find the current task to get its current data
         const currentTask = tasks.find(
           (task) => (task._id || task.id) === taskId
         );
 
         if (!currentTask) {
-          throw new Error("Task not found");
+          throw new Error("Task not found in current tasks list");
         }
 
+        // Send the complete task data with updated status
+        // This fixes the 400 error by including required fields like title
         const updatedTask = await taskAPI.updateTask(taskId, {
           title: currentTask.title,
           description: currentTask.description || "",
@@ -124,7 +129,12 @@ export const useTaskFunctions = () => {
     [tasks]
   );
 
-  // Clear all task data (useful for logout)
+  // Clear error function
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+
+  // Clear tasks function (useful for logout)
   const clearTasks = useCallback(() => {
     setTasks([]);
     setError(null);
@@ -135,14 +145,15 @@ export const useTaskFunctions = () => {
     tasks,
     isTasksLoading,
     error,
-    setError,
 
-    // Functions
+    // Actions
     loadTasks,
     createTask,
     updateTask,
     deleteTask,
     updateTaskStatus,
+    clearError,
     clearTasks,
+    setTasks,
   };
 };

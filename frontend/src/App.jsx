@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { RefreshCw, Plus, LogOut, XCircle } from "lucide-react";
+import { RefreshCw, Plus, XCircle, LogOut } from "lucide-react";
 import { AuthProvider } from "./contexts/AuthContext";
 import { useAuth } from "./contexts/authUtils.jsx";
 import AuthPage from "./components/auth/AuthPage";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import { useTaskFunctions } from "./hooks/task-functions";
-import "./App.css";
+import "./css/index.css";
 
 // Main App Component (wrapped with auth)
 const AppContent = () => {
@@ -15,12 +15,12 @@ const AppContent = () => {
     tasks,
     isTasksLoading,
     error,
-    setError,
     loadTasks,
     createTask,
     updateTask,
     deleteTask,
     updateTaskStatus,
+    clearError,
     clearTasks,
   } = useTaskFunctions();
 
@@ -46,24 +46,47 @@ const AppContent = () => {
     return () => window.removeEventListener("auth:logout", handleAuthLogout);
   }, [clearTasks]);
 
-  // BACKEND CALL HANDLERS: These functions handle form submissions and UI state
+  // BACKEND CALL: POST /tasks - Create a new task
   const handleCreateTask = async (taskData) => {
-    await createTask(taskData);
-    setShowForm(false);
+    try {
+      await createTask(taskData);
+      setShowForm(false);
+    } catch (error) {
+      console.error("Failed to create task:", error);
+      throw error; // Re-throw to handle in TaskForm
+    }
   };
 
+  // BACKEND CALL: PUT /tasks/:id - Update a task by ID
   const handleUpdateTask = async (taskData) => {
-    await updateTask(editingTask._id || editingTask.id, taskData);
-    setEditingTask(null);
-    setShowForm(false);
+    try {
+      await updateTask(editingTask._id || editingTask.id, taskData);
+      setEditingTask(null);
+      setShowForm(false);
+    } catch (error) {
+      console.error("Failed to update task:", error);
+      throw error; // Re-throw to handle in TaskForm
+    }
   };
 
+  // BACKEND CALL: DELETE /tasks/:id - Delete a task by ID
   const handleDeleteTask = async (taskId) => {
-    await deleteTask(taskId);
+    try {
+      await deleteTask(taskId);
+    } catch (error) {
+      console.error("Failed to delete task:", error);
+      throw error; // Re-throw to handle in TaskItem
+    }
   };
 
+  // BACKEND CALL: PUT /tasks/:id - Update task status
   const handleStatusChange = async (taskId, newStatus) => {
-    await updateTaskStatus(taskId, newStatus);
+    try {
+      await updateTaskStatus(taskId, newStatus);
+    } catch (error) {
+      console.error("Failed to update task status:", error);
+      throw error; // Re-throw to handle in TaskItem
+    }
   };
 
   const handleEditTask = (task) => {
@@ -107,7 +130,6 @@ const AppContent = () => {
       <div className="app-container">
         {/* Header */}
         <header className="app-header">
-          {/* Top row: Title/Welcome on left, User info on right */}
           <div className="header-top-row">
             <div className="header-content">
               <h1 className="app-title">Task Manager</h1>
@@ -133,19 +155,14 @@ const AppContent = () => {
             </div>
           </div>
 
-          {/* Bottom row: Action buttons on left */}
           <div className="header-actions">
             <button
-              className={`btn btn-refresh ${isTasksLoading ? "loading" : ""}`}
+              className="btn btn-refresh"
               onClick={handleRefresh}
               disabled={isTasksLoading}
-              title={isTasksLoading ? "Refreshing tasks..." : "Refresh tasks"}
+              title="Refresh tasks"
             >
-              <RefreshCw
-                size={20}
-                className={isTasksLoading ? "spinning" : ""}
-              />
-              Refresh
+              <RefreshCw size={20} />
             </button>
 
             <button
@@ -181,7 +198,7 @@ const AppContent = () => {
               <XCircle size={20} />
               <span>{error}</span>
             </div>
-            <button className="error-close" onClick={() => setError(null)}>
+            <button className="error-close" onClick={clearError}>
               ×
             </button>
           </div>
@@ -216,19 +233,6 @@ const AppContent = () => {
         {/* Footer */}
         <footer className="app-footer">
           <p>Built with React • Secured with JWT Authentication</p>
-          <p className="api-info">
-            <strong>Your Tasks:</strong> {tasks.length} total
-            {tasks.length > 0 && (
-              <>
-                <span className="task-stats">
-                  • {tasks.filter((t) => t.status === "To Do").length} pending •{" "}
-                  {tasks.filter((t) => t.status === "In Progress").length} in
-                  progress • {tasks.filter((t) => t.status === "Done").length}{" "}
-                  completed
-                </span>
-              </>
-            )}
-          </p>
         </footer>
       </div>
     </div>

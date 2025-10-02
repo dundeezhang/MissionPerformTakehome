@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { XCircle, EyeOff, Eye, LogIn } from "lucide-react";
 import { useAuth } from "../../contexts/authUtils.jsx";
 
 const LoginForm = ({ onSwitchToRegister }) => {
@@ -84,7 +83,18 @@ const LoginForm = ({ onSwitchToRegister }) => {
         {error && (
           <div className="error-alert">
             <div className="error-content">
-              <XCircle size={20} />
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+              </svg>
               <span>{error}</span>
             </div>
             <button className="error-close" onClick={clearError}>
@@ -105,7 +115,7 @@ const LoginForm = ({ onSwitchToRegister }) => {
               value={formData.email}
               onChange={handleInputChange}
               className={`form-input ${formErrors.email ? "error" : ""}`}
-              placeholder="Enter your email"
+              placeholder="Email"
               disabled={isLoading}
               autoComplete="email"
             />
@@ -126,7 +136,7 @@ const LoginForm = ({ onSwitchToRegister }) => {
                 value={formData.password}
                 onChange={handleInputChange}
                 className={`form-input ${formErrors.password ? "error" : ""}`}
-                placeholder="Enter your password"
+                placeholder="Password"
                 disabled={isLoading}
                 autoComplete="current-password"
               />
@@ -137,7 +147,35 @@ const LoginForm = ({ onSwitchToRegister }) => {
                 disabled={isLoading}
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                {showPassword ? (
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="m15 18-.722-3.25"></path>
+                    <path d="M2 8.99s3-5.5 10-5.5 10 5.5 10 5.5"></path>
+                    <path d="m9 12.5-.5 3.5"></path>
+                    <path d="M12 13.5V17"></path>
+                    <path d="m15 8.5.5-3.5"></path>
+                    <circle cx="12" cy="8.99" r="2.5"></circle>
+                  </svg>
+                ) : (
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                )}
               </button>
             </div>
             {formErrors.password && (
@@ -169,10 +207,7 @@ const LoginForm = ({ onSwitchToRegister }) => {
                 Signing In...
               </>
             ) : (
-              <>
-                <LogIn size={20} />
-                Sign In
-              </>
+              "Sign In"
             )}
           </button>
         </form>

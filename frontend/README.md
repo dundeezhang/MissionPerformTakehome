@@ -117,7 +117,7 @@ The application uses CSS custom properties for consistent theming:
 
 ### Key Design Features
 
-- Clean, modern interface with subtle shadows and rounded corners
+- Clean, modern interface rounded corners
 - Consistent spacing using a 8px grid system
 - Smooth transitions and hover effects
 - Status-based color coding for tasks

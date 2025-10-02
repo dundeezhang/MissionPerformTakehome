@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowUpDown, ArrowUp, ArrowDown, Clipboard } from "lucide-react";
+import { ArrowUp, ArrowDown, Clipboard } from "lucide-react";
 import TaskItem from "./TaskItem";
 
 const TaskList = ({ tasks, onEdit, onDelete, onStatusChange, isLoading }) => {
@@ -126,24 +126,27 @@ const TaskList = ({ tasks, onEdit, onDelete, onStatusChange, isLoading }) => {
         </div>
 
         <div className="sort-group">
-          <div className="sort-select-group">
-            <label htmlFor="sortBy" className="control-label">
-              Sort by:
-            </label>
-            <select
-              id="sortBy"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="control-select"
-            >
-              {sortOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
+          <label htmlFor="sortBy" className="control-label">
+            Sort by:
+          </label>
+          <select
+            id="sortBy"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="control-select"
+          >
+            {sortOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
 
+        <div className="sort-group">
+          <label htmlFor="listBy" className="control-label">
+            List by:
+          </label>
           <button
             className={`sort-order-btn ${sortOrder}`}
             onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}

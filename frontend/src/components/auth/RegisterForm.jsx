@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { XCircle, EyeOff, Eye, UserPlus } from "lucide-react";
 import { useAuth } from "../../contexts/authUtils.jsx";
 
 const RegisterForm = ({ onSwitchToLogin }) => {
@@ -150,7 +149,18 @@ const RegisterForm = ({ onSwitchToLogin }) => {
         {error && (
           <div className="error-alert">
             <div className="error-content">
-              <XCircle size={20} />
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+              </svg>
               <span>{error}</span>
             </div>
             <button className="error-close" onClick={clearError}>
@@ -172,7 +182,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
                 value={formData.firstName}
                 onChange={handleInputChange}
                 className={`form-input ${formErrors.firstName ? "error" : ""}`}
-                placeholder="Enter your first name"
+                placeholder="First Name"
                 disabled={isLoading}
                 autoComplete="given-name"
               />
@@ -192,7 +202,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
                 value={formData.lastName}
                 onChange={handleInputChange}
                 className={`form-input ${formErrors.lastName ? "error" : ""}`}
-                placeholder="Enter your last name"
+                placeholder="Last Name"
                 disabled={isLoading}
                 autoComplete="family-name"
               />
@@ -233,7 +243,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
               value={formData.email}
               onChange={handleInputChange}
               className={`form-input ${formErrors.email ? "error" : ""}`}
-              placeholder="Enter your email"
+              placeholder="Email"
               disabled={isLoading}
               autoComplete="email"
             />
@@ -265,7 +275,35 @@ const RegisterForm = ({ onSwitchToLogin }) => {
                 disabled={isLoading}
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                {showPassword ? (
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="m15 18-.722-3.25"></path>
+                    <path d="M2 8.99s3-5.5 10-5.5 10 5.5 10 5.5"></path>
+                    <path d="m9 12.5-.5 3.5"></path>
+                    <path d="M12 13.5V17"></path>
+                    <path d="m15 8.5.5-3.5"></path>
+                    <circle cx="12" cy="8.99" r="2.5"></circle>
+                  </svg>
+                ) : (
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                )}
               </button>
             </div>
             {formData.password && (
@@ -319,7 +357,35 @@ const RegisterForm = ({ onSwitchToLogin }) => {
                   showConfirmPassword ? "Hide password" : "Show password"
                 }
               >
-                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                {showConfirmPassword ? (
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="m15 18-.722-3.25"></path>
+                    <path d="M2 8.99s3-5.5 10-5.5 10 5.5 10 5.5"></path>
+                    <path d="m9 12.5-.5 3.5"></path>
+                    <path d="M12 13.5V17"></path>
+                    <path d="m15 8.5.5-3.5"></path>
+                    <circle cx="12" cy="8.99" r="2.5"></circle>
+                  </svg>
+                ) : (
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                )}
               </button>
             </div>
             {formErrors.confirmPassword && (
@@ -340,10 +406,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
                 Creating Account...
               </>
             ) : (
-              <>
-                <UserPlus size={20} />
-                Create Account
-              </>
+              "Create Account"
             )}
           </button>
         </form>
