@@ -1,5 +1,9 @@
 import React, { createContext, useReducer, useEffect } from "react";
 
+// API Base URL - use environment variable or fallback to localhost
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5001/api";
+
 // Auth Context
 const AuthContext = createContext();
 
@@ -143,7 +147,7 @@ export const AuthProvider = ({ children }) => {
         if (accessToken && refreshToken && storedUser) {
           // Verify tokens by fetching user profile
           try {
-            const response = await fetch("http://localhost:5001/api/auth/me", {
+            const response = await fetch(`${API_BASE_URL}/auth/me`, {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
                 "Content-Type": "application/json",
@@ -187,7 +191,7 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: AUTH_ACTIONS.LOGIN_START });
 
     try {
-      const response = await fetch("http://localhost:5001/api/auth/login", {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -229,7 +233,7 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: AUTH_ACTIONS.LOGIN_START });
 
     try {
-      const response = await fetch("http://localhost:5001/api/auth/register", {
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -272,11 +276,9 @@ export const AuthProvider = ({ children }) => {
       const accessToken = storage.getAccessToken();
 
       if (accessToken) {
-        const endpoint = logoutFromAll
-          ? "/api/auth/logout-all"
-          : "/api/auth/logout";
+        const endpoint = logoutFromAll ? "/auth/logout-all" : "/auth/logout";
 
-        await fetch(`http://localhost:5001${endpoint}`, {
+        await fetch(`${API_BASE_URL}${endpoint}`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -302,7 +304,7 @@ export const AuthProvider = ({ children }) => {
         throw new Error("No refresh token available");
       }
 
-      const response = await fetch("http://localhost:5001/api/auth/refresh", {
+      const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

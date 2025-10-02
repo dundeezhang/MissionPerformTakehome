@@ -30,7 +30,12 @@ const corsOptions = {
       ? process.env.ALLOWED_ORIGINS.split(",")
       : ["http://localhost:3000", "http://localhost:5173"];
 
+    // Check if origin is in allowed origins list
     if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    }
+    // Allow all *.vercel.app domains
+    else if (origin && origin.endsWith(".vercel.app")) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
