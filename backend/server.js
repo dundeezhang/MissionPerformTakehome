@@ -26,20 +26,35 @@ const corsOptions = {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
 
+    // Build allowed origins list from env (trim whitespace) or sensible defaults.
+    // Include the deployed frontend origin if not using wildcard vercel rule.
     const allowedOrigins = process.env.ALLOWED_ORIGINS
       ? process.env.ALLOWED_ORIGINS.split(",")
-      : ["http://localhost:3000", "http://localhost:5173"];
+          .map((o) => o.trim())
+          .filter(Boolean)
+      : [
+          "http://localhost:3000",
+          "http://localhost:5173",
+          "https://frontend-omega-eight-12.vercel.app",
+          // Add your deployed frontend explicitly if desired (example):
+        ];
 
-    // Check if origin is in allowed origins list
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
+    const isExplicitlyAllowed = allowedOrigins.includes(origin);
+    const isVercelWildcard = origin.endsWith(".vercel.app");
+
+    if (isExplicitlyAllowed || isVercelWildcard) {
+      return callback(null, true);
     }
-    // Allow all *.vercel.app domains
-    else if (origin && origin.endsWith(".vercel.app")) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
+
+    // Optional debug log (won't leak secrets) to help trace CORS issues
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(
+        `CORS rejection for origin: ${origin}. Allowed list: ${allowedOrigins.join(
+          ","
+        )}`
+      );
     }
+    callback(new Error("Not allowed by CORS"));
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -48,6 +63,27 @@ const corsOptions = {
 
 // Middleware
 app.use(cors(corsOptions));
+
+// Handle preflight requests explicitly
+app.options("*", (req, res) => {
+  const origin = req.headers.origin;
+  if (
+    origin &&
+    (origin.endsWith(".vercel.app") ||
+      origin === "http://localhost:3000" ||
+      origin === "http://localhost:5173")
+  ) {
+    res.header("Access-Control-Allow-Origin", origin);
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Content-Type,Authorization,X-Requested-With"
+    );
+  }
+  res.status(200).send();
+});
+
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
