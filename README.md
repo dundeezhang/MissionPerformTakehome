@@ -1,5 +1,30 @@
 # Task Manager Application
 
+## 🚀 Project Development Overview
+
+### Development Process
+This full-stack task management application was developed using an iterative approach, starting with a solid backend foundation and progressively enhancing the frontend experience. The development followed modern best practices including component-driven architecture, separation of concerns, and responsive design principles.
+
+### Key Technical Decisions
+- **Architecture Choice**: Opted for a traditional REST API architecture with React frontend and Node.js/Express backend for simplicity and maintainability
+- **Database Selection**: Chose MongoDB for flexible schema design and seamless JavaScript integration via Mongoose ODM
+- **State Management**: Implemented custom React hooks pattern to centralize task operations and improve code reusability
+- **Styling Approach**: Used vanilla CSS with CSS custom properties for better performance and easier theming
+- **API Design**: Followed RESTful conventions with proper HTTP status codes and error handling
+
+### Development Challenges & Solutions
+1. **Status Update Validation Issues**: Encountered 400 errors when updating task status due to backend requiring all fields. Resolved by modifying the frontend to send complete task data during status updates.
+
+2. **Code Organization**: Initial implementation had all task functions in the main App component. Refactored to use custom hooks (`useTaskFunctions`) for better separation of concerns and reusability.
+
+3. **Real-time UI Updates**: Needed to ensure UI immediately reflected changes without requiring page refresh. Implemented optimistic updates with proper error rollback mechanisms.
+
+4. **Cross-Origin Resource Sharing**: Configured CORS middleware to handle frontend-backend communication during development while maintaining security for production.
+
+5. **Responsive Design**: Balanced functionality across devices by implementing mobile-first CSS approach with strategic breakpoints and touch-friendly interactions.
+
+---
+
 A full-stack task management application built with React, Node.js, Express.js, and MongoDB. This application provides a complete CRUD interface for managing tasks with real-time updates and a responsive design.
 
 ## 🚀 Features
